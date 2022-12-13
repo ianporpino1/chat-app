@@ -21,7 +21,7 @@
       <input id="input" autocomplete="off" /><button>Send</button>
     </form>
     <form id="username" action="">
-      <input id="input-user" autocomplete="off" /><button>Send Username</button>
+      <input id="input-user" autocomplete="off" /><button>Set Username</button>
     </form>
   </body>
   <script src="/socket.io/socket.io.js"></script>
@@ -32,7 +32,7 @@
     var input=document.getElementById('input') 
 
     var formUser = document.getElementById('username')
-    var username=document.getElementById('input-user')
+    var username= document.getElementById('input-user')
     
     form.addEventListener('submit', function (e) {
         e.preventDefault();
@@ -52,7 +52,6 @@
             username.value=''
         }
     })
-    
 
     socket.on('chat message', (msg) =>{
         var item= document.createElement('li')
