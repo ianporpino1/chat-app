@@ -10,29 +10,49 @@ app.get('/',(req, res)=> {
     res.sendFile(__dirname + '/index.html')
 });
 
-var user='';
+
+const users = [];
+
+function userJoin(id,username)
+{
+    const user={id, username}
+    users.push(user);
+    return user;
+}
+
+
+function getCurrentUser(id)
+{
+    return users.find(user => user.id === id)
+} 
 
 io.on('connection', (socket) => {
     console.log('a user connected')
+
     socket.on('disconnect', () => {
         console.log('user disconnected')
     })
 
     socket.on('user',(username) => {
-        user = username;
-        console.log('user: '+ user)
+        const user = userJoin(socket.id,username)
+        console.log(`${user.username} connected`)
     })
+
+    socket.on('user connect',(username) => {
+        userJoin(socket.id,username)
+    });
 
     socket.on('chat message',(msg) => {
-        io.emit('chat message',user+' said '+ msg)
-        console.log('message: '+ msg)
+        const user = getCurrentUser(socket.id)
+        io.emit('chat message',`${user.username} said ${msg}`)
+        console.log(`${user.username}: ${msg}`)
     })
 
-});
+    
 
-const PORT = 3000;
+});
+const PORT = process.env.PORT || 3000;
 
 server.listen(3000 , () => {
     console.log(`listening on http://localhost:${PORT}`);
 });
-
